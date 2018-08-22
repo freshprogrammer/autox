@@ -15,8 +15,13 @@
 <a href='http://live.ntaxs.com/'>North Texas Autocross Series - Live - http://live.ntaxs.com</a><br>
 <br>
 <a href='http://www.dlbracing.com/'>DLB Racing</a><br>
+<br>
+<a href='https://www.lightspeedimages.com/'>Light Speed Images</a><br>
 
 </body>
+<footer>
+Made by Doug <a href=https://github.com/freshprogrammer>GitHub</a>
+</footer>
 
 <?php
 ?>

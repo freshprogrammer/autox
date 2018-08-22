@@ -20,6 +20,14 @@ a:hover, a:active {
 	text-decoration: underline;
 }
 
+body {
+  text-align: center;
+}
+
+footer {
+  margin-top: 50px;
+}
+
 table {
 	margin: 0px auto;
 }
