@@ -1,23 +1,15 @@
-html, body, div, span, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, code,
-del, dfn, em, img, q, dl, dt, dd, ol, ul, li,
-form, label,table, caption, tbody, tfoot, thead, tr, th, td {
-	font-weight: inherit;
-	font-style: inherit;
-	font-size: 100%;
-	font-family: inherit;
-	/* vertical-align: baseline; */
-}
-
 a:link, a:visited {
 	color: Blue;
 	text-decoration: none;
 }
 
 a:hover, a:active {
-	color: Red;
-	text-decoration: underline;
+	/* color: Red; */
+	/* text-decoration: underline; */
+}
+
+h2 {
+  text-align: center;
 }
 
 body {
@@ -25,7 +17,7 @@ body {
 }
 
 footer {
-  margin-top: 50px;
+  margin-top: 20px;
 }
 
 table {
@@ -35,4 +27,8 @@ table {
 th { 
 	font-weight: bold;
 	background-color: #afb3ea; 
+}
+
+.highlightedRacer {
+	background: cyan;
 }
