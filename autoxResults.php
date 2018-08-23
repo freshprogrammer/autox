@@ -89,6 +89,7 @@ else
 }
 
 echo $dataFile;
+echo "<BR>Formatted by Doug - Source on <a href='https://github.com/freshprogrammer/autox'>Github</a><BR> original is here <a href='$sourceURL'>$sourceURL</a>"
 ?>
 <script>
 formatPage();
