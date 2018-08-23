@@ -10,10 +10,14 @@
 
 <tr><td><h2>DFW Autocross stuff</h2></td></tr>
 
-<tr><td><a href='autoxResults.php'>Processed Data</a></td></tr>
+<tr><td><a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value">Current Data</a> 
+Race Number:<form action='autoxResults.php' method='get'><input type="number" id="raceNumber" name="raceNumber" placeholder="Race Number" min="1" max="999" value='110' /></form>
+		   </td></tr>
+		   
 <tr><td></td></tr>
-<tr><td>Lone Star Chapter BMW CCA (<a href='http://autox.lscbmwcca.org/'>live data</a>) - <a href='http://autox.lscbmwcca.org/'>http://autox.lscbmwcca.org</a></td></tr>
-<tr><td>North Texas Autocross Series (<a href='http://live.ntaxs.com/'>live data</a>) - <a href='http://live.ntaxs.com/'>http://live.ntaxs.com</a></td></tr>
+
+<tr><td>Lone Star Chapter BMW CCA (<a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value + '&sourceURL=http://autox.lscbmwcca.org'">live data</a>) - <a href='http://autox.lscbmwcca.org/'>http://autox.lscbmwcca.org</a></td></tr>
+<tr><td>North Texas Autocross Series (<a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value + '&sourceURL=http://live.ntaxs.com'">live data</a>) - <a href='http://live.ntaxs.com/'>http://live.ntaxs.com</a></td></tr>
 <tr><td></td></tr>
 <tr><td><a href='http://www.dlbracing.com/' target='_blank'>DLB Racing</a></td></tr>
 <tr><td></td></tr>

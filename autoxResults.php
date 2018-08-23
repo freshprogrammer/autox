@@ -16,7 +16,8 @@
 		return trim($input);
 	}
 	
-	$raceNumber = GetInput("racenumber");
+	$raceNumber = GetInput("raceNumber");
+	$sourceURL = GetInput("sourceURL");
 ?>
 <link rel="stylesheet" href="default.css">
 <script>
@@ -79,11 +80,13 @@ function formatPage()
 </script>
 
 <?php
-
-//$dataURL = "http://live.ntaxs.com/";
-$dataURL = "http://autox.lscbmwcca.org/";
-
-$dataFile = file_get_contents($dataURL, true);
+if($sourceURL!="")
+	$dataFile = file_get_contents($sourceURL, true);
+else
+{
+	$dataFile = "No Source URL";
+	echo "sourceURL = '$sourceURL'";
+}
 
 echo $dataFile;
 ?>
