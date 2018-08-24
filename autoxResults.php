@@ -40,7 +40,7 @@ class racerRec{
 		for (var i = 0; i < this.runs.length; i++) 
 		{
 			let thisTime = 'dnf';
-			if(this.runs[i].indexOf("dnf")!=-1 || this.runs[i]=="")
+			if(this.runs[i].indexOf("dnf")!=-1 || this.runs[i].indexOf("off")!=-1 || this.runs[i]=="")
 				thisTime = 'dnf';
 			else if(this.runs[i].indexOf("+")!=-1)
 				thisTime = this.runs[i].substr(0,this.runs[i].indexOf("+"));
@@ -59,12 +59,16 @@ class racerRec{
 		else return this.best;
 	}
 	
-	GetRawTime(input)
+	GetRawTime(input, killDNF=false)
 	{
 		let thisTime = '999999';
 		if(typeof input === 'undefined' || input === null || input=="")
 			return thisTime;
-		if(input.indexOf("+")!=-1)
+		if(killDNF && input.indexOf("dnf")!=-1)
+			thisTime = 999999;
+		if(killDNF && input.indexOf("off")!=-1)
+			thisTime = 999999;
+		else if(input.indexOf("+")!=-1)
 			thisTime = input.substr(0,input.indexOf("+"));
 		else
 			thisTime = input;
@@ -74,20 +78,18 @@ class racerRec{
 	
 	FirstToLast()
 	{
-		if(this.number==74)
-			var debug = true;
 		let lastX = this.runs.length;
 		while(--lastX>=0 && (this.GetRawTime(this.runs[lastX])<=0 || this.GetRawTime(this.runs[lastX])>=999999));
-		return this.GetRawTime(this.runs[0]) - this.GetRawTime(this.runs[lastX]);
+		return this.GetRawTime(this.runs[lastX]) - this.GetRawTime(this.runs[0]);
 	}
 	
-	BestToWorst()
+	BestToWorst(ignoreDNF=false)
 	{
 		let worst = 0;
 		let best =999999;
 		for (var i = 0; i < this.runs.length; i++) 
 		{
-			let thisTime = this.GetRawTime(this.runs[i]);
+			let thisTime = this.GetRawTime(this.runs[i],false);
 			if(thisTime<best && thisTime>1)
 				best = thisTime;
 			if(thisTime>worst && thisTime<999999)
@@ -95,7 +97,12 @@ class racerRec{
 		}
 		if(worst==0)
 			return 0;
-		return worst-best;
+		return best-worst;
+	}
+	
+	BestToWorstIgnoreDNF()
+	{
+		return this.BestToWorst(true);
 	}
 }
 
@@ -192,7 +199,7 @@ function formatPage()
 	bottomTable += "<th>Best</th>";
 	bottomTable += "<th>Diff</th>";
 	bottomTable += "<th>First-Last</th>";
-	bottomTable += "<th>Best-Worst</th>";
+	bottomTable += "<th>Worst-Best</th>";
 	bottomTable += "</tr>";
 	var lastTime = data[0].best;
 	for (i = 0; i < data.length; i++) 
@@ -210,7 +217,7 @@ function formatPage()
 		bottomTable += "<td>"+data[i].best+"</td>";
 		bottomTable += "<td>+"+roundTime(data[i].best-lastTime)+"</td>";
 		bottomTable += "<td>"+roundTime(data[i].FirstToLast())+"</td>";
-		bottomTable += "<td>"+roundTime(data[i].BestToWorst())+"</td>";
+		bottomTable += "<td>"+roundTime(data[i].BestToWorstIgnoreDNF())+"</td>";
 		bottomTable += "</tr>";
 	}
 	bottomTable += "</tbody>";
