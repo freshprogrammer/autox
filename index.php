@@ -10,6 +10,7 @@ $dataName[2] = "Lone Star Chapter BMW CCA";
 $dataURL[2] = 'http://autox.lscbmwcca.org';
 $moreInfoURL[2] = 'https://lscbmwcca.org/motorsports/autocross/autocross-results/';
 
+$totalGroups = 2;
 $latestEventGroup = 2;//should match one of the above
 $latestEventDate = "DateMissing"
 
@@ -38,12 +39,24 @@ Race Number:<input type="number" id="raceNumber" name="raceNumber" placeholder="
 		   
 <tr><td></td></tr>
 
-<tr><td>Lone Star Chapter BMW CCA (<a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value + '&sourceURL=http://autox.lscbmwcca.org'">live data</a>) - <a href='http://autox.lscbmwcca.org/'>http://autox.lscbmwcca.org</a></td></tr>
-<tr><td>North Texas Autocross Series (<a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value + '&sourceURL=http://live.ntaxs.com'">live data</a>) - <a href='http://live.ntaxs.com/'>http://live.ntaxs.com</a></td></tr>
+<?php
+//list all group links
+for ($i = 1; $i <= $totalGroups; $i++) {
+	?>
+	<tr><td>
+	<?php echo $dataName[$i]?> 
+	(<a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value + '&sourceURL=<?php echo $dataURL[$i] ?>'">formatted data</a>) - 
+	     <a href='<?php echo $dataURL[$i]     ?>' target='_blank'><?php echo $dataURL[$i] ?></a> - 
+	Past <a href='<?php echo $moreInfoURL[$i] ?>' target='_blank'>Results</a>
+	</td></tr>
+	<?php
+}
+?>
+
+
 <tr><td></td></tr>
 <tr><td>Other links</td></tr>
 <tr><td><a href='http://www.dlbracing.com/' target='_blank'>DLB Racing</a></td></tr>
-<tr><td></td></tr>
 <tr><td><a href='https://www.lightspeedimages.com/' target='_blank'>Light Speed Images</a></td></tr>
 
 </tbody>
