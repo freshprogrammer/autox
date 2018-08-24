@@ -22,6 +22,37 @@
 <link rel="stylesheet" href="default.css">
 <script>
 
+class racerRec{
+	
+	constructor(number, name, carClass)
+	{
+		this.name = name;
+		this.number = number;
+		this.carClass = carClass;
+		this.car = '';
+		this.runs = [];
+		this.best = 13;
+	}
+	
+	calcBest()
+	{
+		this.best = 'dnf';
+		for (var i = 0; i < this.runs.length; i++) 
+		{
+			let thisTime = 'dnf';
+			if(this.runs[i].indexOf("dnf")!=-1 || this.runs[i]=="")
+				thisTime = 'dnf';
+			else if(this.runs[i].indexOf("+")!=-1)
+				thisTime = this.runs[i].substr(0,this.runs[i].indexOf("+"));
+			else
+				thisTime = this.runs[i];
+			
+			if(thisTime<this.best)
+				this.best = thisTime;
+		}
+	}
+}
+
 function formatPage()
 {
 	var numberOffset = -2;//start of row is 2 cell to the left
@@ -29,53 +60,98 @@ function formatPage()
 	::assumes this format::
 	header row with colspan in first cell and last cells are 'Total' & 'Diff.'
 	data row
-	pos/number/name/car/color/runX (1-10)/Total/Diff
-	
+	pos/class/number/name/car/color/runX (1-10)/Total/Diff
 	*/
 	
-	
-	console.log("scanning");
 	var raceNumber = '<?php echo $raceNumber ?>';
 	if(!(!isNaN(parseFloat(raceNumber)) && isFinite(raceNumber)))
 	{
 		//not a number
 		raceNumber = "zzz";
 	}
-	console.log("race number = '"+raceNumber+"'");
 	
-	var firstDataCell = 0;
 	var cols = 0;
-	var highlightedRowStart = -1;
+	var runCount = 1;
+	var data = [];
 	
-	var tds = document.getElementsByTagName("td");
-	//find start of data
-	for (i = 0; i < tds.length; i++) 
-	{ 
-		if(tds[i].textContent == "Total")
-		{
-			firstDataCell = i+2;
-			break;
-		}
-	}
-	for (i = firstDataCell; i < tds.length; i++) 
-	{ 
-		if(tds[i].textContent == raceNumber)
-		{
-			console.log("found it - "+i);
-			cols = tds[i].parentElement.children.length;
-			highlightedRowStart = i+numberOffset;
-		}
-	}
-	
-	//highlight row
-	if(highlightedRowStart!=-1)
+	var carClass = '?';
+	var trs = document.getElementsByTagName("tr");
+	for (r = 0; r < trs.length; r++) 
 	{
-		tds[highlightedRowStart].parentElement.className = "highlightedRacer";
-		for (i = highlightedRowStart; i < highlightedRowStart+cols; i++) 
-		{ 
-			//process row
+		if(trs[r].children.length<9)
+			continue;//non part of data table
+		if(trs[r].children[0].tagName=='TH')
+		{
+			if(trs[r].children[0].textContent.indexOf(' - ')==-1)
+			{
+				continue;//only care about th rows with class info
+			}
+			else
+			{
+				carClass = trs[r].children[0].textContent.substr(0,trs[r].children[0].textContent.indexOf(' - '));
+			}
 		}
-	}	
+		else if(trs[r].children[0].tagName=='TD')
+		{
+			if(carClass=='?')
+				continue;//skip untill a car class is found (in the data)
+			cols = trs[r].children.length;
+			var runs = cols-8;//8 non run cols;
+			
+			var col = 0;
+			var pos = trs[r].children[col++].textContent;
+			var rowCarClass = trs[r].children[col++].textContent;//ignored in favor of th class
+			var number = trs[r].children[col++].textContent;
+			var name = trs[r].children[col++].textContent;
+			var car = trs[r].children[col++].textContent;
+			var carColor = trs[r].children[col++].textContent;
+			var run1 = trs[r].children[col++].textContent;
+			var run2 = trs[r].children[col++].textContent;
+			var run3 = trs[r].children[col++].textContent;
+			
+			var rec = new racerRec(number, name, carClass);
+			rec.car = car;
+			rec.runs = [run1,run2,run3];
+			rec.calcBest();
+			data.push(rec);
+			
+			if(number==raceNumber)
+				trs[r].className = "highlightedRacer";
+		}
+	}
+	
+	//relist all racers
+	var bottomTable = "<table cellpadding=3 style='border-collapse: collapse' border=1 align='center'>";
+	bottomTable += "<tbody>";
+	bottomTable += "<tr>";
+	bottomTable += "<th>Pos</th>";
+	bottomTable += "<th>Class</th>";
+	bottomTable += "<th>#</th>";
+	bottomTable += "<th>Name</th>";
+	bottomTable += "<th>Car</th>";
+	bottomTable += "<th>Best</th>";
+	bottomTable += "<th>Diff</th>";
+	bottomTable += "</tr>";
+	var lastTime = data[0].best;
+	for (i = 0; i < data.length; i++) 
+	{
+		if(data[i].number==raceNumber)
+			bottomTable += "<tr class='highlightedRacer'>";
+		else
+			bottomTable += "<tr>";
+		
+		bottomTable += "<td>"+(i+1)+"</td>";//0 offset +1
+		bottomTable += "<td>"+data[i].carClass+"</td>";
+		bottomTable += "<td>"+data[i].number+"</td>";
+		bottomTable += "<td>"+data[i].name+"</td>";
+		bottomTable += "<td>"+data[i].car+"</td>";
+		bottomTable += "<td>"+data[i].best+"</td>";
+		bottomTable += "<td>"+(lastTime-data[i].best)+"</td>";
+		bottomTable += "</tr>";
+	}
+	bottomTable += "</tbody>";
+	bottomTable += "</table>";
+	document.getElementById('dataTable').innerHTML = bottomTable;
 }
 </script>
 
@@ -89,6 +165,10 @@ else
 }
 
 echo $dataFile;
+
+echo "<br>";
+echo "<div id='dataTable'></div>";
+
 echo "<BR>Formatted by Doug - Source on <a href='https://github.com/freshprogrammer/autox'>Github</a><BR> original is here <a href='$sourceURL'>$sourceURL</a>"
 ?>
 <script>

@@ -3,10 +3,12 @@
 //NTAXS
 $dataName[1] = "North Texas Autocross Series";
 $dataURL[1] = 'http://live.ntaxs.com';
+$moreInfoURL[1] = 'http://www.ntaxs.com/results.html';
 
 //LSCBMW
 $dataName[2] = "Lone Star Chapter BMW CCA";
 $dataURL[2] = 'http://autox.lscbmwcca.org';
+$moreInfoURL[2] = 'https://lscbmwcca.org/motorsports/autocross/autocross-results/';
 
 $latestEventGroup = 2;//should match one of the above
 $latestEventDate = "DateMissing"
