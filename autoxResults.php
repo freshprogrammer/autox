@@ -24,14 +24,14 @@
 
 class racerRec{
 	
-	constructor(number, name, carClass)
+	constructor()
 	{
-		this.name = name;
-		this.number = number;
-		this.carClass = carClass;
+		this.name = '';
+		this.number = 0;
+		this.carClass = '';
 		this.car = '';
 		this.runs = [];
-		this.best = 13;
+		this.best = 0;
 	}
 	
 	calcBest()
@@ -50,6 +50,13 @@ class racerRec{
 			if(thisTime<this.best)
 				this.best = thisTime;
 		}
+	}
+	
+	bestTime()
+	{
+		if(this.best=='dnf')
+			return 999999;
+		else return this.best;
 	}
 }
 
@@ -96,7 +103,9 @@ function formatPage()
 			if(carClass=='?')
 				continue;//skip untill a car class is found (in the data)
 			cols = trs[r].children.length;
-			var runs = cols-8;//8 non run cols;
+			var runCount = cols-8;//8 non run cols;
+			
+			var rec = new racerRec();
 			
 			var col = 0;
 			var pos = trs[r].children[col++].textContent;
@@ -105,13 +114,17 @@ function formatPage()
 			var name = trs[r].children[col++].textContent;
 			var car = trs[r].children[col++].textContent;
 			var carColor = trs[r].children[col++].textContent;
-			var run1 = trs[r].children[col++].textContent;
-			var run2 = trs[r].children[col++].textContent;
-			var run3 = trs[r].children[col++].textContent;
 			
-			var rec = new racerRec(number, name, carClass);
+			
+			for (runX = 0; runX < runCount; runX++)
+			{
+				rec.runs.push(trs[r].children[col++].textContent);
+			}
+			
+			rec.number = number;
+			rec.name = name;
+			rec.carClass = carClass;
 			rec.car = car;
-			rec.runs = [run1,run2,run3];
 			rec.calcBest();
 			data.push(rec);
 			
@@ -119,6 +132,9 @@ function formatPage()
 				trs[r].className = "highlightedRacer";
 		}
 	}
+	
+	//sort
+	data.sort((a, b) => a.bestTime() - b.bestTime());
 	
 	//relist all racers
 	var bottomTable = "<table cellpadding=3 style='border-collapse: collapse' border=1 align='center'>";
@@ -146,7 +162,7 @@ function formatPage()
 		bottomTable += "<td>"+data[i].name+"</td>";
 		bottomTable += "<td>"+data[i].car+"</td>";
 		bottomTable += "<td>"+data[i].best+"</td>";
-		bottomTable += "<td>"+(lastTime-data[i].best)+"</td>";
+		bottomTable += "<td>+"+Math.round(1000*(data[i].best-lastTime))/1000+"</td>";
 		bottomTable += "</tr>";
 	}
 	bottomTable += "</tbody>";
