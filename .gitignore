@@ -1,2 +1,7 @@
 # User-specific files
 *Thumbs.db
+
+//eclipse
+.project
+.buildpath
+.settings/
