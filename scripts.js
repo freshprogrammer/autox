@@ -87,7 +87,7 @@ function roundTime(input)
 	return Math.round(1000*input)/1000
 }
 
-function formatPage()
+function formatPage(raceNumber)
 {
 	var numberOffset = -2;//start of row is 2 cell to the left
 	/*
@@ -97,7 +97,6 @@ function formatPage()
 	pos/class/number/name/car/color/runX (1-10)/Total/Diff
 	*/
 	
-	var raceNumber = '<?php echo $raceNumber ?>';
 	if(!(!isNaN(parseFloat(raceNumber)) && isFinite(raceNumber)))
 	{
 		//not a number
@@ -156,7 +155,7 @@ function formatPage()
 			data.push(rec);
 			
 			if(number==raceNumber)
-				trs[r].className = "dataRow highlightedRacer";
+				trs[r].className = "highlightedRacer";
 			else
 				trs[r].className = "dataRow";
 		}
@@ -183,7 +182,7 @@ function formatPage()
 	for (i = 0; i < data.length; i++) 
 	{
 		if(data[i].number==raceNumber)
-			bottomTable += "<tr class='dataRow highlightedRacer'>";
+			bottomTable += "<tr class='highlightedRacer'>";
 		else
 			bottomTable += "<tr class='dataRow'>";
 		
