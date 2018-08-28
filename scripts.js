@@ -87,9 +87,12 @@ function roundTime(input)
 	return Math.round(1000*input)/1000
 }
 
-function formatPage(raceNumber)
+var raceNumber = -1;
+var conePenalty = 0;
+function formatPage(raceN, coneP)
 {
-	var numberOffset = -2;//start of row is 2 cell to the left
+	raceNumber = raceN;
+	conePenalty = coneP;
 	/*
 	::assumes this format::
 	header row with colspan in first cell and last cells are 'Total' & 'Diff.'

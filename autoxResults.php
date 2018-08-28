@@ -17,8 +17,9 @@
 		}
 		return trim($input);
 	}
-	
+
 	$raceNumber = GetInput("raceNumber");
+	$conePenalty = GetInput("conePenalty");
 	$sourceURL = GetInput("sourceURL");
 
 	if($sourceURL!="")
@@ -37,5 +38,5 @@
 	echo "<BR>Formatted by Doug - Source on <a href='https://github.com/freshprogrammer/autox'>Github</a><BR> original is here <a href='$sourceURL'>$sourceURL</a>"
 ?>
 <script>
-formatPage(<?php echo $raceNumber ?>);
+formatPage(<?php echo $raceNumber ?>, <?php echo $conePenalty ?>);
 </script>
