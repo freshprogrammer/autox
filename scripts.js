@@ -141,7 +141,6 @@ function formatPage(raceNumber)
 			var car = trs[r].children[col++].textContent;
 			var carColor = trs[r].children[col++].textContent;
 			
-			
 			for (runX = 0; runX < runCount; runX++)
 			{
 				rec.runs.push(trs[r].children[col++].textContent);
@@ -177,10 +176,17 @@ function formatPage(raceNumber)
 	bottomTable += "<th>Diff</th>";
 	bottomTable += "<th>First-Last</th>";
 	bottomTable += "<th>Worst-Best</th>";
+	
+	for (runX = 0; runX < runCount; runX++)
+	{
+		bottomTable += "<th>Run "+(runX+1)+"</th>";
+	}
 	bottomTable += "</tr>";
 	var lastTime = data[0].best;
 	for (i = 0; i < data.length; i++) 
 	{
+		if(data[i].number==41)
+			var debug = true;
 		if(data[i].number==raceNumber)
 			bottomTable += "<tr class='highlightedRacer'>";
 		else
@@ -194,7 +200,16 @@ function formatPage(raceNumber)
 		bottomTable += "<td>"+data[i].best+"</td>";
 		bottomTable += "<td>+"+roundTime(data[i].best-lastTime)+"</td>";
 		bottomTable += "<td>"+roundTime(data[i].FirstToLast())+"</td>";
-		bottomTable += "<td>"+roundTime(data[i].BestToWorstIgnoreDNF())+"</td>";
+		bottomTable += "<td style='border-right-color: black;border-right-width: 4px;'>"+roundTime(data[i].BestToWorstIgnoreDNF())+"</td>";
+
+		for (runX = 0; runX < runCount; runX++)
+		{
+			if(data[i].GetRawTime(data[i].runs[runX])==data[i].best)
+				bottomTable += "<td><div style='background-image: radial-gradient(ellipse, rgba(255,255,0,1), rgba(0,0,0,0));'>"+data[i].runs[runX]+"</div></td>";
+			else
+				bottomTable += "<td>"+data[i].runs[runX]+"</td>";
+		}
+		
 		bottomTable += "</tr>";
 	}
 	bottomTable += "</tbody>";
