@@ -156,7 +156,9 @@ function formatPage()
 			data.push(rec);
 			
 			if(number==raceNumber)
-				trs[r].className = "highlightedRacer";
+				trs[r].className = "dataRow highlightedRacer";
+			else
+				trs[r].className = "dataRow";
 		}
 	}
 	
@@ -181,9 +183,9 @@ function formatPage()
 	for (i = 0; i < data.length; i++) 
 	{
 		if(data[i].number==raceNumber)
-			bottomTable += "<tr class='highlightedRacer'>";
+			bottomTable += "<tr class='dataRow highlightedRacer'>";
 		else
-			bottomTable += "<tr>";
+			bottomTable += "<tr class='dataRow'>";
 		
 		bottomTable += "<td>"+(i+1)+"</td>";//0 offset +1
 		bottomTable += "<td>"+data[i].carClass+"</td>";
