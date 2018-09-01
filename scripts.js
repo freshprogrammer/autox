@@ -1,4 +1,5 @@
-class racerRec{
+class racerRec
+{
 	
 	constructor()
 	{
@@ -89,7 +90,7 @@ function roundTime(input)
 
 var raceNumber = -1;
 var conePenalty = 0;
-function formatPage(raceN, coneP)
+function formatPage(raceN, dataColsCount, coneP)
 {
 	raceNumber = raceN;
 	conePenalty = coneP;
@@ -133,6 +134,8 @@ function formatPage(raceN, coneP)
 				continue;//skip untill a car class is found (in the data)
 			cols = trs[r].children.length;
 			var runCount = cols-8;//8 non run cols;
+			//assume 6 data cols - offset as necisary
+			runCount += 6-dataColsCount;
 			
 			var rec = new racerRec();
 			
@@ -142,7 +145,10 @@ function formatPage(raceN, coneP)
 			var number = trs[r].children[col++].textContent;
 			var name = trs[r].children[col++].textContent;
 			var car = trs[r].children[col++].textContent;
-			var carColor = trs[r].children[col++].textContent;
+			if(dataColsCount==6)
+			{//skip color if this page only have 5 base cols
+				var carColor = trs[r].children[col++].textContent;
+			}
 			
 			for (runX = 0; runX < runCount; runX++)
 			{
