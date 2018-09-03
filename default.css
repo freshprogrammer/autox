@@ -29,6 +29,14 @@ th {
 	background-color: #afb3ea; 
 }
 
+.dataRow:nth-child(even) {
+	background: #FFF
+}
+
+.dataRow:nth-child(odd) {
+	background: #EEE
+}
+
 .highlightedRacer {
 	background: cyan;
 }
