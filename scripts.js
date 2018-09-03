@@ -8,6 +8,7 @@ class racerRec
 		this.carClass = '';
 		this.car = '';
 		this.runs = [];
+		this.finals = []
 		this.best = 0;
 	}
 	
@@ -16,16 +17,9 @@ class racerRec
 		this.best = 'dnf';
 		for (var i = 0; i < this.runs.length; i++) 
 		{
-			let thisTime = 'dnf';
-			if(this.runs[i].indexOf("dnf")!=-1 || this.runs[i].indexOf("off")!=-1 || this.runs[i]=="")
-				thisTime = 'dnf';
-			else if(this.runs[i].indexOf("+")!=-1)
-				thisTime = this.runs[i].substr(0,this.runs[i].indexOf("+"));
-			else
-				thisTime = this.runs[i];
-			
-			if(thisTime<this.best)
-				this.best = thisTime;
+			this.finals[i] = this.GetFinalTime(this.runs[i]);
+			if(this.finals[i]<this.best)
+				this.best = this.finals[i];
 		}
 	}
 	
@@ -33,7 +27,24 @@ class racerRec
 	{
 		if(this.best=='dnf')
 			return 999999;
-		else return this.best;
+		else 
+			return this.best;
+	}
+	
+	GetFinalTime(input)
+	{
+		let thisTime = 'dnf';
+		if(input.indexOf("dnf")!=-1 || input.indexOf("off")!=-1 || input=="")
+			thisTime = 'dnf';
+		else if(input.indexOf("+")!=-1)
+		{
+			thisTime = parseFloat(input.substr(0,input.indexOf("+")));
+			let cones = input.substr(input.indexOf("+")+1);
+			thisTime += cones*conePenalty;
+		}
+		else
+			thisTime = input;
+		return thisTime;
 	}
 	
 	GetRawTime(input, killDNF=false)
@@ -213,7 +224,7 @@ function formatPage(raceN, dataColsCount, coneP)
 
 		for (runX = 0; runX < runCount; runX++)
 		{
-			if(data[i].GetRawTime(data[i].runs[runX])==data[i].best)
+			if(data[i].finals[runX]==data[i].best)
 				bottomTable += "<td><div style='background-image: radial-gradient(ellipse, rgba(255,255,0,1), rgba(0,0,0,0));'>"+data[i].runs[runX]+"</div></td>";
 			else
 				bottomTable += "<td>"+data[i].runs[runX]+"</td>";
