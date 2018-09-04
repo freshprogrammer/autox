@@ -14,7 +14,7 @@ class racerRec
 	
 	calcBest()//return best time or dnf if no non dnf times found
 	{
-		this.best = 'dnf';
+		this.best = '999';
 		for (var i = 0; i < this.runs.length; i++) 
 		{
 			this.finals[i] = this.GetFinalTime(this.runs[i]);
@@ -43,7 +43,7 @@ class racerRec
 			thisTime += cones*conePenalty;
 		}
 		else
-			thisTime = input;
+			thisTime = parseFloat(input);
 		return thisTime;
 	}
 	
@@ -99,7 +99,9 @@ function roundTime(input)
 	return Math.round(1000*input)/1000
 }
 
+var highlightIndex = 0;
 var raceNumber = -1;
+var runCount = 1;
 var conePenalty = 0;
 function formatPage(raceN, dataColsCount, coneP)
 {
@@ -119,7 +121,6 @@ function formatPage(raceN, dataColsCount, coneP)
 	}
 	
 	var cols = 0;
-	var runCount = 1;
 	var data = [];
 	
 	var carClass = '?';
@@ -144,7 +145,7 @@ function formatPage(raceN, dataColsCount, coneP)
 			if(carClass=='?')
 				continue;//skip untill a car class is found (in the data)
 			cols = trs[r].children.length;
-			var runCount = cols-8;//8 non run cols;
+			runCount = cols-8;//8 non run cols;
 			//assume 6 data cols - offset as necisary
 			runCount += 6-dataColsCount;
 			
@@ -208,7 +209,10 @@ function formatPage(raceN, dataColsCount, coneP)
 		if(data[i].number==41)
 			var debug = true;
 		if(data[i].number==raceNumber)
+		{
+			highlightIndex = i;
 			bottomTable += "<tr class='highlightedRacer'>";
+		}
 		else
 			bottomTable += "<tr class='dataRow'>";
 		
@@ -234,5 +238,104 @@ function formatPage(raceN, dataColsCount, coneP)
 	}
 	bottomTable += "</tbody>";
 	bottomTable += "</table>";
-	document.getElementById('dataTable').innerHTML = bottomTable;
+	
+	let chartCanvas = "<canvas id='myChart' width='8' height='3'></canvas>";
+	
+	document.getElementById('dataTable').innerHTML = bottomTable + chartCanvas;
+	
+	createChart(data);
+}
+
+function createChart(data)
+{
+	let chartLabels = [];
+	for (runX = 0; runX < runCount; runX++)
+	{
+		chartLabels[runX] = "Run #"+(runX+1);
+	}
+	
+	let chartDataset = [];
+	
+	let i = highlightIndex;
+	var ctx = document.getElementById("myChart").getContext('2d');
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: chartLabels,
+			datasets: [{
+				label: data[i].name,
+				data: data[i].finals,
+				backgroundColor: '#00f',
+				borderColor: '#00f',
+				lineTension: 0,
+				fill: false,
+			}, {
+				label: data[i-1].name,
+				data: data[i-1].finals,
+				backgroundColor: '#66f',
+				borderColor: '#66f',
+				lineTension: 0,
+				fill: false,
+			}, {
+				label: data[i-2].name,
+				data: data[i-2].finals,
+				backgroundColor: '#bbf',
+				borderColor: '#bbf',
+				lineTension: 0,
+				fill: false,
+			}, {
+				label: data[2].name,
+				data: data[2].finals,
+				backgroundColor: '#fbb',
+				borderColor: '#fbb',
+				lineTension: 0,
+				fill: false,
+			}, {
+				label: data[1].name,
+				data: data[1].finals,
+				backgroundColor: '#f66',
+				borderColor: '#f66',
+				lineTension: 0,
+				fill: false,
+			}, {
+				label: data[0].name,
+				data: data[0].finals,
+				backgroundColor: '#f00',
+				borderColor: '#f00',
+				lineTension: 0,
+				fill: false,
+			}]
+		},
+		options: {
+			responsive: true,
+			title: {
+				display: true,
+				text: 'Autocross Times'
+			},
+			tooltips: {
+				mode: 'index',
+				intersect: false,
+			},
+			hover: {
+				mode: 'nearest',
+				intersect: true
+			},
+			scales: {
+				xAxes: [{
+					display: true,
+					scaleLabel: {
+						display: false,
+						labelString: 'Run'
+					}
+				}],
+				yAxes: [{
+					display: true,
+					scaleLabel: {
+						display: false,
+						labelString: 'Time'
+					}
+				}]
+			}
+		}
+	});
 }

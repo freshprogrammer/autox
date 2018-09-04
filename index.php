@@ -52,7 +52,7 @@ for ($i = 1; $i <= $totalGroups; $i++) {
 	?>
 	<tr><td>
 	<?php echo $clubName[$i]?> 
-	(<a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value + '&conePenalty=<?php echo $clubConePenalty[$latestEventGroup] ?>&dataColsCount=<?php echo $clubDataColsCount[$i] ?>&sourceURL=<?php echo $clubLiveURL[$i] ?>'">formatted data</a>) - 
+	(<a href='#' onclick="window.location = 'autoxResults.php?raceNumber='+document.getElementById('raceNumber').value + '&conePenalty=<?php echo $clubConePenalty[$i] ?>&dataColsCount=<?php echo $clubDataColsCount[$i] ?>&sourceURL=<?php echo $clubLiveURL[$i] ?>'">formatted data</a>) - 
 	Original Live Results: <a href='<?php echo $clubLiveURL[$i] ?>' target='_blank'><?php echo $clubLiveURL[$i] ?></a> - 
 	Past <a href='<?php echo $clubPastResultsURL[$i] ?>' target='_blank'>Results</a>
 	</td></tr>

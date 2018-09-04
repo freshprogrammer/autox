@@ -1,5 +1,7 @@
 <link rel="stylesheet" href="default.css">
 <script src="scripts.js"></script>
+<script src="lib\chartjs\Chart.bundle.js"></script>
+<script src="lib\chartjs\utils.js"></script>
 <?php
 	function GetInput($name, $checkPost=true, $checkGet=true)
 	{
@@ -39,5 +41,6 @@
 	echo "<BR>Formatted by Doug - Source on <a href='https://github.com/freshprogrammer/autox'>Github</a><BR> original is here <a href='$sourceURL'>$sourceURL</a>"
 ?>
 <script>
+//formate page with racenumber, datColsCount, cone penalty
 formatPage(<?php echo $raceNumber ?>, <?php echo $dataColsCount ?>, <?php echo $conePenalty ?>);
 </script>
