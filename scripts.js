@@ -254,6 +254,9 @@ function createChart(data)
 		chartLabels[runX] = "Run #"+(runX+1);
 	}
 	
+	let min = 52;
+	let max = 65;
+	
 	let chartDataset = [];
 	
 	let i = highlightIndex;
@@ -331,8 +334,14 @@ function createChart(data)
 				yAxes: [{
 					display: true,
 					scaleLabel: {
-						display: false,
+						display: true,
 						labelString: 'Time'
+					},
+					ticks: {
+						min: min,
+						max: max,
+						// forces step size to be 5 units
+						stepSize: 1
 					}
 				}]
 			}
