@@ -10,6 +10,7 @@ class racerRec
 		this.runs = [];
 		this.finals = []
 		this.best = 0;
+		this.worst = 0;
 	}
 	
 	calcBest()//return best time or dnf if no non dnf times found
@@ -20,6 +21,17 @@ class racerRec
 			this.finals[i] = this.GetFinalTime(this.runs[i]);
 			if(this.finals[i]<this.best)
 				this.best = this.finals[i];
+		}
+	}
+	
+	calcWorst()//return best time or dnf if no non dnf times found
+	{
+		this.worst = '0';
+		for (var i = 0; i < this.runs.length; i++) 
+		{
+			this.finals[i] = this.GetFinalTime(this.runs[i]);
+			if(this.finals[i]>this.worst)
+				this.worst = this.finals[i];
 		}
 	}
 	
@@ -77,7 +89,7 @@ class racerRec
 		let best =999999;
 		for (var i = 0; i < this.runs.length; i++) 
 		{
-			let thisTime = this.GetRawTime(this.runs[i],false);
+			let thisTime = this.GetRawTime(this.runs[i],ignoreDNF);
 			if(thisTime<best && thisTime>1)
 				best = thisTime;
 			if(thisTime>worst && thisTime<999999)
@@ -172,6 +184,7 @@ function formatPage(raceN, dataColsCount, coneP)
 			rec.carClass = carClass;
 			rec.car = car;
 			rec.calcBest();
+			rec.calcWorst();
 			data.push(rec);
 			
 			if(number==raceNumber)
@@ -230,6 +243,8 @@ function formatPage(raceN, dataColsCount, coneP)
 		{
 			if(data[i].finals[runX]==data[i].best)
 				bottomTable += "<td><div style='background-image: radial-gradient(ellipse, rgba(255,255,0,1), rgba(0,0,0,0));'>"+data[i].runs[runX]+"</div></td>";
+			else if(data[i].finals[runX]==data[i].worst)
+				bottomTable += "<td><div style='background-image: radial-gradient(ellipse, rgba(255,100,100,1), rgba(0,0,0,0));'>"+data[i].runs[runX]+"</div></td>";
 			else
 				bottomTable += "<td>"+data[i].runs[runX]+"</td>";
 		}
@@ -254,22 +269,46 @@ function createChart(data)
 		chartLabels[runX] = "Run #"+(runX+1);
 	}
 	
-	let min = 52;
-	let max = 65;
+	let min = 9999;
+	let max = 0;
+	let i=0;
+	for (i = 0; i < data.length; i++) 
+	{
+		for (runX = 0; runX < runCount; runX++)
+		{
+			if(data[i].finals[runX]<min)
+				min=data[i].finals[runX];
+		}
+	}
+	if(data[highlightIndex].worst>max)
+		max=data[highlightIndex].worst;
+	
+	min-=1;
+	max+=1;
 	
 	let chartDataset = [];
 	
-	let i = highlightIndex;
+	//overlap bug when highlighted racer (i) is 0, 1 or 2
+	
+	
+	i = highlightIndex;
 	var ctx = document.getElementById("myChart").getContext('2d');
 	var myChart = new Chart(ctx, {
 		type: 'line',
 		data: {
 			labels: chartLabels,
 			datasets: [{
+				label: data[data.length-1].name,
+				data: data[data.length-1].finals,
+				backgroundColor: '#0f0',
+				borderColor: '#0f0',
+				lineTension: 0,
+				fill: false,
+			}, {
 				label: data[i].name,
 				data: data[i].finals,
-				backgroundColor: '#00f',
-				borderColor: '#00f',
+				backgroundColor: '#0ff',
+				borderColor: '#0ff',
 				lineTension: 0,
 				fill: false,
 			}, {
@@ -340,7 +379,6 @@ function createChart(data)
 					ticks: {
 						min: min,
 						max: max,
-						// forces step size to be 5 units
 						stepSize: 1
 					}
 				}]
